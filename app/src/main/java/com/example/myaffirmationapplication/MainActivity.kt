@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -16,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.myaffirmationapplication.data.Datasource
 import com.example.myaffirmationapplication.model.Affirmation
 import com.example.myaffirmationapplication.ui.theme.MyAffirmationApplicationTheme
 
@@ -29,7 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    AffirmationCard(affirmation = Affirmation(R.string.affirmation2, R.drawable.image2))
+                    AffirmationList(affirmationList = Datasource().loadAffirmations())
                 }
             }
         }
@@ -38,7 +41,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AffirmationCard(affirmation: Affirmation, modifier: Modifier = Modifier){
-    Card(modifier = modifier.padding(8.dp).height(200.dp), elevation = 4.dp) {
+    Card(modifier = modifier.padding(8.dp), elevation = 4.dp) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Image(
                 painter = painterResource(id = affirmation.imageRsc),
@@ -50,10 +53,21 @@ fun AffirmationCard(affirmation: Affirmation, modifier: Modifier = Modifier){
 
             )
 
-            Text(text = stringResource(id = affirmation.stringRsc))
+            Text(text = stringResource(id = affirmation.stringRsc),
+                modifier = Modifier.padding(10.dp),
+                style = MaterialTheme.typography.h6
+                )
 
         }
+    }
+}
 
+@Composable
+fun AffirmationList(affirmationList: List<Affirmation>){
+    LazyColumn{
+        items(affirmationList){ affirmation ->
+            AffirmationCard(affirmation)
+        }
     }
 }
 
